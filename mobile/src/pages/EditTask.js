@@ -42,16 +42,12 @@ function EditTask({ navigation }){
          setNameT(task.name);
       }
 
-      setTask({ 
-         name: nameT, 
-         status: task.status,
-      });
-      console.log(nameT);
-      console.log(task);
-      
       api.post('/task/edit', {
          'id': id, 
-         'todo': task,
+         'todo': {
+            'name' : nameT,
+            'status': task.status,
+         },
       });
 
       navigation.navigate('Tasks');
@@ -81,7 +77,7 @@ function EditTask({ navigation }){
    return(
       <> 
          <View style={styles.addTaskPg}>
-            <TextInput placeholder={task.name} style={styles.input} onSubmitEnding={(txt) => { setNameT(txt) }} />
+            <TextInput placeholder={task.name} style={styles.input} defaulValue={nameT} onChangeText={ (txt) => setNameT(txt)} onSubmitEnding={(txt) => { setNameT(txt) }} />
             <View style={{flexDirection: 'row', marginTop: 10}}>
                <Text style={styles.dnTxt}>Encerrada: </Text>
                {loadButton(task)}   
