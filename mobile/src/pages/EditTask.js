@@ -12,13 +12,18 @@ function EditTask({ navigation }){
 
    //carregar dados do BD
    async function load(){
-      const response = await api.post('/task/find',{
+      try{
+         const response = await api.post('/task/find',{
          'taskid' : id
-      });
+         });
 
-      let t = response.data;
+         let t = response.data;
 
-      setTask(t);
+         setTask(t);
+      }
+      catch(e){
+         console.log(e);
+      }
    }
 
    //Envio de informações da edição ao Bd e retorno para task Page

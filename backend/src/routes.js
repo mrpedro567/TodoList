@@ -14,7 +14,7 @@ routes.post('/task/delete', TodoController.destroy);
 //Edit Task
 routes.post('/task/edit', TodoController.edit);
 //Find specific task
-routes.get('/task/find', TodoController.search);
+routes.post('/task/find', TodoController.search);
 
 //Categories routes
 //New Category
