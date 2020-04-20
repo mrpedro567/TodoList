@@ -4,10 +4,13 @@ import { MaterialIcons } from '@expo/vector-icons';
 import api from '../services/api';
 
 function EditTask({ navigation }){
+   //Estados da task
    const [task, setTask] = useState({});
    const [nameT, setNameT] = useState('');
+   const category = navigation.getParam('cat');
    const id = navigation.getParam('_id');
 
+   //carregar dados do BD
    async function load(){
       const response = await api.post('/task/find',{
          'taskid' : id
@@ -18,10 +21,41 @@ function EditTask({ navigation }){
       setTask(t);
    }
 
+   //Envio de informações da edição ao Bd e retorno para task Page
+   async function handleDone(){
+      if(nameT == '' || nameT == null){
+         setNameT(task.name);
+      }
+
+      await api.post('/task/edit', {
+         'id': id, 
+         'todo': {
+            'name' : nameT,
+            'status': task.status,
+         },
+      });
+
+      navigation.navigate('Tasks', {Task_category: category});
+   }
+
+   //Envio do delete e retorna pra task page
+   async function handleDelete(){
+      await api.post('/task/delete', {
+         'id' : id,
+      });
+
+      navigation.navigate('Tasks', {Task_category: category});
+   }
+
+   //Executar Load inicial 
    useEffect(() => {
       load();
+
+      setNameT(task.name);
+
    }, []);
 
+   //Troca de Status
    function handleStatusChange(){
       if(task.status){
          setTask({
@@ -37,28 +71,13 @@ function EditTask({ navigation }){
       }
    }
 
-   function handleDone(){
-      if(nameT == ''){
-         setNameT(task.name);
-      }
-
-      api.post('/task/edit', {
-         'id': id, 
-         'todo': {
-            'name' : nameT,
-            'status': task.status,
-         },
-      });
-
-      navigation.navigate('Tasks');
-   }
-
+   //Função para renderizar botão de status
    function loadButton(tt){
       if(tt.status){
          return(
             <View>
                <TouchableOpacity style={styles.buttonEnd} onPress={() => {handleStatusChange() }}>
-                  <MaterialIcons name='check' style={styles.end} size={25} />
+                  <MaterialIcons name='check' style={{color: '#fff'}} size={25} />
                </TouchableOpacity>
             </View>
          );
@@ -67,7 +86,7 @@ function EditTask({ navigation }){
          return(
             <View>
                <TouchableOpacity style={styles.buttonTodo} onPress={() => {handleStatusChange() }}>
-                  <MaterialIcons name='close' styles={styles.todo} size={25} />
+                  <MaterialIcons name='close' style={{color: '#fff'}} size={25} />
                </TouchableOpacity>
             </View>
          );
@@ -84,8 +103,11 @@ function EditTask({ navigation }){
             </View>
          </View>
          <View style={styles.doneButton}>
+            <TouchableOpacity style={styles.delete} onPress={() => { handleDelete()}} >
+               <MaterialIcons name='delete' size={26} style={{color: '#fff'}}/>
+            </TouchableOpacity>
             <TouchableOpacity style={styles.done} onPress={() => { handleDone()}}>
-               <MaterialIcons name='done' size={20} style={{color: '#fff'}}/>
+               <MaterialIcons name='done' size={26} style={{color: '#fff'}}/>
             </TouchableOpacity>
          </View>
       </>
@@ -94,13 +116,13 @@ function EditTask({ navigation }){
 
 }
 
+//Styles
 const styles = StyleSheet.create({
    buttonEnd: {
       width: 30, 
       height: 30,
       borderRadius: 15,
       backgroundColor: '#269464',
-      flexDirection: 'row', 
       justifyContent: 'center', 
       alignItems: 'center', 
       marginLeft: '15%',
@@ -112,28 +134,19 @@ const styles = StyleSheet.create({
       height: 30,
       borderRadius: 15,
       backgroundColor: '#ad2121',
-      flexDirection: 'row', 
       justifyContent: 'center', 
       alignItems: 'center', 
       marginLeft: '15%',
       marginTop: 12
    },
 
-   end: {
-      color: '#fff'
-   }, 
-
-   todo: {
-      color: '#fff'
-   }, 
-
    dnTxt: {
-      fontSize: 19,
+      fontSize: 20,
       color: '#272727', 
       fontWeight: 'bold', 
       marginLeft: 25,
       marginTop: 15,
-
+      marginBottom: 15
    },
    
    input: {
@@ -167,10 +180,21 @@ const styles = StyleSheet.create({
       height: 60,
       borderRadius: 30,
       backgroundColor: '#868cfc',
-      flexDirection: 'row', 
       justifyContent: 'center', 
       alignItems: 'center',
-   }
+      marginBottom: 10
+   }, 
+
+    delete: {
+      width: 60, 
+      height: 60,
+      borderRadius: 30,
+      backgroundColor: '#ad2121',
+      justifyContent: 'center', 
+      alignItems: 'center',
+      marginBottom: 20
+   }, 
+
 });
 
 export default EditTask;

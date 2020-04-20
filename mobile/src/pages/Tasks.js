@@ -1,15 +1,15 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, TouchableOpacity, Text,  } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, RefreshControl} from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { MaterialIcons } from '@expo/vector-icons';
 import api from '../services/api';
 
-
 function Tasks({navigation}){
-
+   //Estado para tarefas e categorias
    const [category, setCategory ] = useState('');
    const [tasks, setTasks] = useState([]);
 
+   //Carregar dados do Banco de Dados 
    async function loadTask(){
       const response = await api.get('/task/index');
       var ts = [];
@@ -18,15 +18,14 @@ function Tasks({navigation}){
          ts = [...ts, t];
       });
 
-      //console.log(ts);
       setTasks(ts);
    }
-
+   
+   //Executar loadTask e carregar categoria quando abrir a pagina
    useEffect(() => {
       setCategory(navigation.getParam('Task_category'));
       loadTask();
-   }, []);
-
+   }, [navigation]);
 
    return (
       <>
@@ -34,11 +33,10 @@ function Tasks({navigation}){
             { 
                tasks.map((task) => {
                   if(task.category == category){
-                     //console.log('Foi');
                      if(task.status == true){
                         return(
                            <TouchableOpacity key={task._id} style={styles.taskDoneButton} onPress={ ()=> {
-                             navigation.navigate('EditTask', {_id: task._id});
+                             navigation.navigate('EditTask', {_id: task._id, cat: category});
                            }}>
                               <Text style={styles.taskText}>{task.name}</Text>
                            </TouchableOpacity>
@@ -47,7 +45,7 @@ function Tasks({navigation}){
                      else{
                         return(
                            <TouchableOpacity key={task._id} style={styles.taskUndoneButton} onPress={ ()=> {
-                              navigation.navigate('EditTask', {_id: task._id});
+                              navigation.navigate('EditTask', {_id: task._id, cat: category});
                            }}>                                                               
                               <Text style={styles.taskText}>{task.name}</Text>
                            </TouchableOpacity>
@@ -56,17 +54,19 @@ function Tasks({navigation}){
                   }
                })
             }
-
          </View>
             <View style={styles.addButton}>
-               <TouchableOpacity style={styles.addTask} > 
-                  <MaterialIcons name='more-horiz'size={20} style={{color: '#fff'}}/>
+               <TouchableOpacity style={styles.addTask} onPress={ () => {
+                  navigation.navigate('AddTask', {category: category});
+               }} > 
+                  <MaterialIcons name='add'size={20} style={{color: '#fff'}} />
                </TouchableOpacity>
             </View>
       </>
    );
 };
 
+//Estilização
 const styles = StyleSheet.create({
    taskText: {
       color: '#fff', 
@@ -113,19 +113,20 @@ const styles = StyleSheet.create({
    }, 
 
    addButton: {
-         position: 'absolute',
-         bottom: 15, 
-         right: 20,
+      position: 'absolute',
+      bottom: 15, 
+      right: 20,
    },
 
    addTask: {
-         width: 60, 
-         height: 60,
-         borderRadius: 30,
-         backgroundColor: '#868cfc',
-         flexDirection: 'row', 
-         justifyContent: 'center', 
-         alignItems: 'center',
+      width: 60, 
+      height: 60,
+      marginTop: 10,
+      borderRadius: 30,
+      backgroundColor: '#868cfc',
+      flexDirection: 'row', 
+      justifyContent: 'center', 
+      alignItems: 'center',
       },
 
 })

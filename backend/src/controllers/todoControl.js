@@ -30,9 +30,9 @@ module.exports = {
    async destroy(request, response){
       const { id } = request.body;
 
-      await Todo.deleteOne({'_id' : id});
+      const res = await Todo.deleteOne({'_id' : id});
 
-      return response.json({ message: 'Deleted'});
+      return response.json(res);
    }, 
 
    async edit(request, response){

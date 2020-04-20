@@ -4,6 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import Categories from './pages/Categories';
 import Tasks from './pages/Tasks';
 import EditTask from './pages/EditTask';
+import AddTask from './pages/AddTask';
 
 const Routes = createAppContainer(
    createStackNavigator({
@@ -21,6 +22,15 @@ const Routes = createAppContainer(
             title: 'Tarefas',
          }
       },
+
+      AddTask: {
+         screen: AddTask,
+
+         navigationOptions: {
+            title: 'Adicionar Nova Tarefa',
+         }
+      },
+
       EditTask: {
          screen: EditTask,
 
