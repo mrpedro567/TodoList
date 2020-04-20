@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, RefreshControl} from 'react-native';
 import { createStackNavigator } from 'react-navigation-stack';
 import { MaterialIcons } from '@expo/vector-icons';
-import api from '../services/api';
+import api from '../../services/api';
 
 function Tasks({navigation}){
    //Estado para tarefas e categorias

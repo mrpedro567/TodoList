@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View , StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
-import api from '../services/api';
+import api from '../../services/api';
 
 function EditTask({ navigation }){
    //Estados da task

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import api from '../services/api';
+import api from '../../services/api';
 import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 
@@ -12,7 +12,7 @@ function Categories({ navigation }){
       const cats = response.data;
       let tmp = [];
       cats.map((k) => {
-         tmp = [...tmp, k.name];
+         tmp = [...tmp, k];
       });
 
       setCat(tmp);
@@ -20,7 +20,7 @@ function Categories({ navigation }){
 
    useEffect(() => {
       load();
-   }, []);
+   }, [navigation]);
 
    return (
       <>
@@ -29,9 +29,11 @@ function Categories({ navigation }){
                cat.map((category, index) =>{
                   return(
                      <TouchableOpacity key={index} style={styles.category} onPress={() =>{
-                        navigation.navigate('Tasks', { Task_category: category})
-                     }}>
-                        <Text style={styles.categoryText}> {category} </Text>
+                        navigation.navigate('Tasks', { Task_category: category.name})
+                     }} onLongPress={() => {
+                        navigation.navigate('EditCategory', {id: category._id})
+                     }} >
+                        <Text style={styles.categoryText}> {category.name} </Text>
                      </TouchableOpacity>
                   )
                })    
@@ -42,7 +44,9 @@ function Categories({ navigation }){
 
          <View style={styles.addButton}>
             <TouchableOpacity style={styles.addCategories}>
-               <MaterialIcons name='more-horiz' size={20} style={{color: '#fff'}}/>
+               <MaterialIcons name='add' size={28} style={{color: '#fff'}} onPress={() => {
+                  navigation.navigate('AddCategory');
+               }} />
             </TouchableOpacity>
          </View>
       </>

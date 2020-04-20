@@ -31,5 +31,13 @@ module.exports = {
       const up = await Category.updateOne({'_id' : id}, { 'name': name});
 
       return response.json(up);
+   },
+
+   async search(request, response){
+      const { id } = request.body;
+
+      const category = await Category.findOne({ '_id' : id});
+   
+      return response.json(category);
    }
 }

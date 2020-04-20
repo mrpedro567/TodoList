@@ -5,6 +5,7 @@ const CategoryController = require('./controllers/categoryController');
 const routes = Router();
 
 //tasks routes
+
 //New Task
 routes.post('/task/newTodo', TodoController.store);
 //get all tasks
@@ -17,6 +18,7 @@ routes.post('/task/edit', TodoController.edit);
 routes.post('/task/find', TodoController.search);
 
 //Categories routes
+
 //New Category
 routes.post('/cat/newCat', CategoryController.store);
 //get all Categories
@@ -25,5 +27,7 @@ routes.get('/cat/index', CategoryController.index);
 routes.post('/cat/delete', CategoryController.destroy);
 //Edit Category
 routes.post('/cat/edit', CategoryController.edit);
+//Find Specific Category
+routes.post('/cat/find', CategoryController.search);
 
 module.exports = routes;
