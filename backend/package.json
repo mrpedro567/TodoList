@@ -9,6 +9,6 @@
     "nodemon": "^2.0.3"
   },
   "scripts": {
-    "bg" : "nodemon ./src/index.js"
+    "bg": "nodemon ./src/index.js"
   }
 }
