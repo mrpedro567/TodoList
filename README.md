@@ -14,7 +14,7 @@ Depois, precisamos instalar o Expo no computador:
 
 ### Instalando Expo
 ```bash
-yarn add global expo-cli
+yarn add expo
 ```
 E tambem o expo em um dispositivo [Mobile](https://expo.io/tools#client)
 
