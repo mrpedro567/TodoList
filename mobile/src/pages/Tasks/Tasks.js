@@ -20,6 +20,25 @@ function Tasks({navigation}){
 
       setTasks(ts);
    }
+
+   //Carrega e define Style para datas de acordo com a data atual
+   function loadDate(t){
+      if(t.date[0] != undefined && t.date[1] != undefined && t.date[2] != undefined){
+         return(
+            <Text style={styles.date}>{t.date[0]+'/'+t.date[1]+'/'+t.date[2]}</Text>
+         );         
+      }
+      else if(t.date[0] != undefined && t.date[1] != undefined){
+         return(
+               <Text style={styles.date}>{t.date[0]+'/'+t.date[1]}</Text>
+         );      
+      }
+      else if(t.date[1] != undefined && t.date[2] != undefined){
+         return(
+               <Text style={styles.date}>{t.date[1]+'/'+t.date[2]}</Text>
+         );
+      }
+   }
    
    //Executar loadTask e carregar categoria quando abrir a pagina
    useEffect(() => {
@@ -39,6 +58,7 @@ function Tasks({navigation}){
                              navigation.navigate('EditTask', {_id: task._id, cat: category});
                            }}>
                               <Text style={styles.taskText}>{task.name}</Text>
+                              {loadDate(task)}
                            </TouchableOpacity>
                         );
                      }
@@ -48,6 +68,7 @@ function Tasks({navigation}){
                               navigation.navigate('EditTask', {_id: task._id, cat: category});
                            }}>                                                               
                               <Text style={styles.taskText}>{task.name}</Text>
+                              {loadDate(task)}
                            </TouchableOpacity>
                         );
                      }
@@ -72,6 +93,13 @@ const styles = StyleSheet.create({
       color: '#fff', 
       fontSize: 20,
       fontWeight: 'bold',
+   },
+
+   date: {
+      color: '#fff',
+      fontSize: 20, 
+      fontWeight: 'bold',
+      marginTop: 5,
    },
 
    taskDoneButton: {

@@ -2,12 +2,13 @@ const Todo = require('../models/todo');
 
 module.exports = {
    async store(request, response){
-      const { name, category, status } = request.body;
+      const { name, category, status, date } = request.body;
 
       const todo = await Todo.create({
          name, 
          category, 
-         status
+         status,
+         date
       });
 
       return response.json(todo);

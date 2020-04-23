@@ -7,12 +7,16 @@ function AddTask({ navigation }){
    const category = navigation.getParam('category');
    const [taskName, setTaskName] = useState('');
    const [taskStatus, setTaskStatus] = useState(false);
+   const [newDay, setNewDay] = useState();
+   const [newMonth, setNewMonth] = useState();
+   const [newYear, setNewYear] = useState();
 
    async function handleDone(){
       const todo = await api.post('/task/newTodo', {
          'name': taskName,
          'category': category,
          'status': taskStatus,
+         'date' : [newDay, newMonth, newYear],
       });
 
       navigation.navigate('Tasks', {Task_category: category});
@@ -40,6 +44,20 @@ function AddTask({ navigation }){
       }
    }
 
+    //Função para renderizar os inputs para datas
+   function renderDate(){
+      return (
+         <View style={{marginLeft: 15, flexDirection: 'row', marginTop: 20}}>
+            <TextInput keyboardType='number-pad' placeholder='dd' style={styles.dateInput} defaultValue={newDay} onChangeText={ (dt) => setNewDay(dt)} onSubmitEnding={(dt) => { setNewDay(dt) }}/>
+            <Text style={{fontSize: 35, marginLeft: 10}}>/</Text>
+            <TextInput keyboardType='number-pad' placeholder='mm' style={styles.dateInput} defaultValue={newMonth} onChangeText={ (dt) => setNewMonth(dt)} onSubmitEnding={(dt) => { setNewMonth(dt) }} />
+            <Text style={{fontSize: 35, marginLeft: 10}}>/</Text>
+            <TextInput keyboardType='number-pad' placeholder='aaaa' style={styles.dateInput}  defaultValue={newYear} onChangeText={ (dt) => setNewYear(dt)} onSubmitEnding={(dt) => { setNewYear(dt) }}/>
+         </View>
+      );
+   
+   }
+
    //Mundança do Status
    function handleStatusChange(){
       if(taskStatus){
@@ -59,6 +77,7 @@ function AddTask({ navigation }){
                <Text style={styles.inputLabel}>Status: </Text>
                {loadButton()}
             </View>
+            {renderDate()}
          </View>
          <View style={styles.doneView}>
             <TouchableOpacity style={styles.doneButton} onPress={() => { handleDone()}}>
@@ -88,6 +107,17 @@ const styles = StyleSheet.create({
       padding:20,
       backgroundColor: '#272727', 
       borderWidth: 1,
+   },
+
+   dateInput: {
+      color: '#000',
+      fontSize: 16,
+      borderBottomColor: '#909090',
+      borderStyle: 'solid',
+      borderBottomWidth: 1,
+      width: 45,
+      height: 35,
+      marginLeft: 10
    },
 
     buttonEnd: {

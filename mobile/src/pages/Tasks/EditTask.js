@@ -7,6 +7,9 @@ function EditTask({ navigation }){
    //Estados da task
    const [task, setTask] = useState({});
    const [nameT, setNameT] = useState('');
+   const [newDay, setNewDay] = useState();
+   const [newMonth, setNewMonth] = useState();
+   const [newYear, setNewYear] = useState();
    const category = navigation.getParam('cat');
    const id = navigation.getParam('_id');
 
@@ -28,17 +31,32 @@ function EditTask({ navigation }){
 
    //Envio de informações da edição ao Bd e retorno para task Page
    async function handleDone(){
+      //check se houve mudança de nome
       if(nameT == '' || nameT == null){
          setNameT(task.name);
       }
 
-      await api.post('/task/edit', {
-         'id': id, 
-         'todo': {
-            'name' : nameT,
-            'status': task.status,
-         },
-      });
+      //check se houve mudança da data e manda os dados p/ o DB
+      if(newDay == undefined && newMonth == undefined && newYear == undefined){
+         await api.post('/task/edit', {
+            'id': id, 
+            'todo': {
+               'name' : nameT,
+               'status': task.status,
+               'date' : [task.date[0], task.date[1], task.date[2]],
+            },
+         });
+      }
+      else{
+         await api.post('/task/edit', {
+            'id': id, 
+            'todo': {
+               'name' : nameT,
+               'status': task.status,
+               'date' : [newDay, newMonth, newYear],
+            },
+         });
+      }
 
       navigation.navigate('Tasks', {Task_category: category});
    }
@@ -52,26 +70,20 @@ function EditTask({ navigation }){
       navigation.navigate('Tasks', {Task_category: category});
    }
 
-   //Executar Load inicial 
-   useEffect(() => {
-      load();
-
-      setNameT(task.name);
-
-   }, []);
-
    //Troca de Status
    function handleStatusChange(){
       if(task.status){
          setTask({
             name: task.name,
             status: false,
+            date: task.date
          });
       }
       else{
          setTask({
             name: task.name,
             status: true,
+            date: task.date
          });
       }
    }
@@ -98,6 +110,29 @@ function EditTask({ navigation }){
       }
    }
 
+   //Função para renderizar os inputs para datas
+   function renderDate(){
+      if(task.date != undefined){
+         return (
+            <View style={{marginLeft: 15, flexDirection: 'row'}}>
+               <TextInput keyboardType='number-pad' placeholder={task.date[0]} style={styles.dateInput} defaultValue={newDay} onChangeText={ (dt) => setNewDay(dt)} onSubmitEnding={(dt) => { setNewDay(dt) }}/>
+               <Text style={{fontSize: 35, marginLeft: 10}}>/</Text>
+               <TextInput keyboardType='number-pad' placeholder={task.date[1]} style={styles.dateInput} defaultValue={newMonth} onChangeText={ (dt) => setNewMonth(dt)} onSubmitEnding={(dt) => { setNewMonth(dt) }} />
+               <Text style={{fontSize: 35, marginLeft: 10}}>/</Text>
+               <TextInput keyboardType='number-pad' placeholder={task.date[2]} style={styles.dateInput}  defaultValue={newYear} onChangeText={ (dt) => setNewYear(dt)} onSubmitEnding={(dt) => { setNewYear(dt) }}/>
+            </View>
+      );
+      }
+   }
+
+   //Executar Load inicial 
+   useEffect( () => {
+      load();
+
+      setNameT(task.name);
+   }, []);
+
+
    return(
       <> 
          <View style={styles.addTaskPg}>
@@ -106,6 +141,12 @@ function EditTask({ navigation }){
                <Text style={styles.dnTxt}>Encerrada: </Text>
                {loadButton(task)}   
             </View>
+            <View style={{flexDirection: 'row'}}>
+               <Text style={styles.dnTxt}>Data </Text>
+               <Text style={styles.obsTxt}>(Formato dd/mm/aaaa)</Text>
+               <Text style={styles.obsTxt}>:</Text>
+            </View>
+            {renderDate()}
          </View>
          <View style={styles.doneButton}>
             <TouchableOpacity style={styles.delete} onPress={() => { handleDelete()}} >
@@ -151,7 +192,26 @@ const styles = StyleSheet.create({
       fontWeight: 'bold', 
       marginLeft: 25,
       marginTop: 15,
+   },
+
+   obsTxt: {
+      fontSize: 15,
+      color: '#272727', 
+      fontWeight: 'bold', 
+      marginLeft: 5,
+      marginTop: 19,
       marginBottom: 15
+   },
+
+   dateInput: {
+      color: '#000',
+      fontSize: 16,
+      borderBottomColor: '#909090',
+      borderStyle: 'solid',
+      borderBottomWidth: 1,
+      width: 45,
+      height: 35,
+      marginLeft: 10
    },
    
    input: {
