@@ -8,7 +8,7 @@ To do list mobile desenvolvido com React Native + [Expo](https://expo.io) e Reac
 Antes de Começar, tenha o [Yarn](https://classic.yarnpkg.com/pt-BR/docs/install) instalado no computador
 
 Agora, precisamos configurar o caminho para o Backend. Para isso, no arquivo: 
-[/mobile/src/services/api.js](https://github.com/mrpedro567/TodoList/blob/master/mobile/src/services/api.js) mude o endereço de ip para o da sua maquina.
+[/mobile/src/services/api.js](https://github.com/mrpedro567/TodoList/tree/master/mobile/src/services) mude o endereço de ip para o da sua maquina.
 
 Depois, precisamos instalar o Expo no computador:
 
