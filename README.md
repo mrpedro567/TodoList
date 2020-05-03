@@ -3,6 +3,10 @@
 ## Overview
 To do list mobile desenvolvido com React Native + [Expo](https://expo.io) e React JS, com Mongo DB 
 
+## Screenshots
+![](/img/Screenshot_20200501-144347.png) ![](/img/Screenshot_20200501-144355.png)
+![](/img/Screenshot_20200501-144406.png)
+
 ## Instalação e Uso
 
 **Antes de Começar, tenha o [Yarn](https://classic.yarnpkg.com/pt-BR/docs/install) instalado no computador**
